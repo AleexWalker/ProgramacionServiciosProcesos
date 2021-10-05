@@ -3,11 +3,11 @@ package CreandoHebrasThread2_2;
 public class CreandoHebrasThread {
     public static void main(String[] args) {
 
-        Tarea1 t1 = new Tarea1();
-        Tarea2 t2 = new Tarea2();
+        Tarea1 tareaHola = new Tarea1();
+        Tarea2 tareaAdios = new Tarea2();
 
-        t1.start(); //ojo no pongo t1.run
-        t2.start();
+        tareaHola.start();
+        tareaAdios.start();
     }
 }
 
