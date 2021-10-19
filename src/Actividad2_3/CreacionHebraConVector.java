@@ -1,7 +1,6 @@
 package Actividad2_3;
 
 public class CreacionHebraConVector {
-
     public static void main ( String args[] ) {
         int numHebras = 5;
 
