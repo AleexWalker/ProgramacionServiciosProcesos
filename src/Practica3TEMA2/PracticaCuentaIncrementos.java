@@ -72,7 +72,6 @@ class MiHebra extends Thread {
     CuentaIncrementos c;
 
     public MiHebra(long tope, CuentaIncrementos c) {
-
         this.tope = tope;
         this.c = c;
     }
