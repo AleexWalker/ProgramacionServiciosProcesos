@@ -6,6 +6,8 @@ public class CalculoPrimosVector_a extends Thread{
     public static void main(String args[]) {
         int numHebras;
         CuentaIncrementos c = new CuentaIncrementos();
+        CuentaIncrementosNoPrimos cNoPrimos = new CuentaIncrementosNoPrimos();
+
         long vectorNumeros[] = {
                 200000033L, 200000039L, 200000051L, 200000069L,
                 200000081L, 200000083L, 200000089L, 200000093L,
@@ -23,9 +25,11 @@ public class CalculoPrimosVector_a extends Thread{
 
         implementacionSecuencial(vectorNumeros);
         c = new CuentaIncrementos();
-        implementacionCiclica(vectorNumeros, numHebras, c);
+        cNoPrimos = new CuentaIncrementosNoPrimos();
+        implementacionCiclica(vectorNumeros, numHebras, c, cNoPrimos);
         c = new CuentaIncrementos();
-        implementacionBloques(vectorNumeros, numHebras, c);
+        cNoPrimos = new CuentaIncrementosNoPrimos();
+        implementacionBloques(vectorNumeros, numHebras, c, cNoPrimos);
 
 
     }
@@ -35,6 +39,7 @@ public class CalculoPrimosVector_a extends Thread{
         long t2;
         double tt;
         CuentaIncrementos c = new CuentaIncrementos();
+        CuentaIncrementosNoPrimos cNoPrimos = new CuentaIncrementosNoPrimos();
 
         System.out.println("");
         System.out.println("Implementación secuencial.");
@@ -46,6 +51,8 @@ public class CalculoPrimosVector_a extends Thread{
             if (esPrimo(numero)){
                 System.out.println(numero + " ");
                 c.incrementaNumIncrementos();
+            } else {
+                cNoPrimos.incrementaNumIncrementos();
             }
         }
 
@@ -55,9 +62,10 @@ public class CalculoPrimosVector_a extends Thread{
 
         System.out.println("Tiempo secuencial (seg.):\t\t\t" + tt);
         System.out.println("¡Hay " + c.dameNumIncrementos() + " numeros primos!");
+        System.out.println("¡Hay " + cNoPrimos.dameNumIncrementos() + " numeros NO primos!");
     }
 
-    static void implementacionCiclica(long[] vectorNumeros, int numHebras, CuentaIncrementos c) {
+    static void implementacionCiclica(long[] vectorNumeros, int numHebras, CuentaIncrementos c, CuentaIncrementosNoPrimos cNoPrimos) {
         long t1;
         long t2;
         double tt;
@@ -71,7 +79,7 @@ public class CalculoPrimosVector_a extends Thread{
         t1 = System.nanoTime();
 
         for (int i = 0; i < numHebras; i++) {
-            v[i] = new MiHebraCiclica(i, numHebras, vectorNumeros, c);
+            v[i] = new MiHebraCiclica(i, numHebras, vectorNumeros, c, cNoPrimos);
             v[i].start();
         }
 
@@ -88,19 +96,22 @@ public class CalculoPrimosVector_a extends Thread{
 
         System.out.println("Tiempo cíclico (seg.):\t\t\t" + tt);
         System.out.println("¡Hay " + c.dameNumIncrementos() + " numeros primos!");
+        System.out.println("¡Hay " + cNoPrimos.dameNumIncrementos() + " numeros NO primos!");
     }
 
-    static class MiHebraCiclica extends Thread {
+    public static class MiHebraCiclica extends Thread {
         private int idHebra;
         private long [] longitudVector;
         private int numHebras;
         CuentaIncrementos c;
+        CuentaIncrementosNoPrimos cNoPrimos;
 
-        public MiHebraCiclica(int i, int numHebras, long[] vectorNumeros , CuentaIncrementos c) {
+        public MiHebraCiclica(int i, int numHebras, long[] vectorNumeros , CuentaIncrementos c, CuentaIncrementosNoPrimos cNoPrimos) {
             this.numHebras = numHebras;
             this.longitudVector = vectorNumeros;
             this.idHebra = i;
             this.c = c;
+            this.cNoPrimos = cNoPrimos;
         }
 
         public void run () {
@@ -108,6 +119,8 @@ public class CalculoPrimosVector_a extends Thread{
                 if (esPrimo(longitudVector[j])) {
                     System.out.println(longitudVector[j] + " ");
                     c.incrementaNumIncrementos();
+                } else {
+                    cNoPrimos.incrementaNumIncrementos();
                 }
             }
         }
@@ -115,7 +128,7 @@ public class CalculoPrimosVector_a extends Thread{
 
 //------------------------------------------------------------------------------------------------------------
 
-    static void implementacionBloques(long[] vectorNumeros, int numHebras, CuentaIncrementos c) {
+    static void implementacionBloques(long[] vectorNumeros, int numHebras, CuentaIncrementos c, CuentaIncrementosNoPrimos cNoPrimos) {
 
         long t1;
         long t2;
@@ -129,7 +142,7 @@ public class CalculoPrimosVector_a extends Thread{
         t1 = System.nanoTime();
 
         for (int i = 0; i < numHebras; i++) {
-            v[i] = new MiHebraBloques(i, numHebras, vectorNumeros, c);
+            v[i] = new MiHebraBloques(i, numHebras, vectorNumeros, c, cNoPrimos);
             v[i].start();
         }
 
@@ -146,6 +159,7 @@ public class CalculoPrimosVector_a extends Thread{
 
         System.out.println("Tiempo Bloques (seg.):\t\t\t" + tt);
         System.out.println("¡Hay " + c.dameNumIncrementos() + " numeros primos!");
+        System.out.println("¡Hay " + cNoPrimos.dameNumIncrementos() + " numeros NO primos!");
     }
 
     static class MiHebraBloques extends Thread {
@@ -153,12 +167,14 @@ public class CalculoPrimosVector_a extends Thread{
         private long [] longitudVector;
         private int numHebras;
         CuentaIncrementos c;
+        CuentaIncrementosNoPrimos cNoPrimos;
 
-        public MiHebraBloques(int i, int numHebras, long[] vectorNumeros, CuentaIncrementos c) {
+        public MiHebraBloques(int i, int numHebras, long[] vectorNumeros, CuentaIncrementos c, CuentaIncrementosNoPrimos cNoPrimos) {
             this.numHebras = numHebras;
             this.longitudVector = vectorNumeros;
             this.idHebra = i;
             this.c = c;
+            this.cNoPrimos = cNoPrimos;
         }
 
         public void run () {
@@ -169,6 +185,8 @@ public class CalculoPrimosVector_a extends Thread{
                 if (esPrimo(longitudVector[i])) {
                     System.out.println(longitudVector[i] + " ");
                     c.incrementaNumIncrementos();
+                } else {
+                    cNoPrimos.incrementaNumIncrementos();
                 }
             }
         }
@@ -191,6 +209,18 @@ public class CalculoPrimosVector_a extends Thread{
 }
 
 class CuentaIncrementos {
+    AtomicLong numIncrementos = new AtomicLong(0);
+
+    void incrementaNumIncrementos() {
+        numIncrementos.incrementAndGet();
+    }
+
+    AtomicLong dameNumIncrementos() {
+        return (numIncrementos);
+    }
+}
+
+class CuentaIncrementosNoPrimos {
     AtomicLong numIncrementos = new AtomicLong(0);
 
     void incrementaNumIncrementos() {
