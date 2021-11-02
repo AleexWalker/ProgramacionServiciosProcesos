@@ -88,7 +88,6 @@ public class ActividadREDUCCIONES extends Thread {
 
             for (int j = miId; j < vector.length; j += numHebras) {
                 sumatorio += vector[j];
-
             }
             a.acumulaValor(sumatorio);
         }
